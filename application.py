@@ -31,7 +31,7 @@ def index():
 def register():
     """Register a new user."""
 
-    errors = {}
+    errors = {"email": None, "username": None, "password": None}
 
     # Check if the method is post
     if request.method == "POST":
@@ -48,7 +48,18 @@ def register():
         if len(username) < 3:
             errors["username"] = "The username is not valid. It must be at least 3 characters."
 
-        return render_template("register.html", errors=errors)
+        # Validate password input values
+        password = request.form.get("password").strip()
+        if len(password) < 3:
+            errors["password"] = "The password is not valid. It must be at least 3 characters."
+
+        # Return registration page with error messages
+        if errors["email"] or errors["username"] or errors["password"]:
+            return render_template("register.html", errors=errors)
+
+        # TODO: Connect with database
+
+        return render_template("register_success.html")
 
     # Return registration page for get requests
     return render_template("register.html", errors=errors)
