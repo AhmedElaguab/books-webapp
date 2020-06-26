@@ -43,6 +43,11 @@ def register():
         except EmailNotValidError as e:
             errors["email"] = e
 
+        # Validate username input values
+        username = request.form.get("username").strip()
+        if len(username) < 3:
+            errors["username"] = "The username is not valid. It must be at least 3 characters."
+
         return render_template("register.html", errors=errors)
 
     # Return registration page for get requests
