@@ -1,9 +1,10 @@
 import os
 
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, request
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from email_validator import validate_email, EmailNotValidError
 
 app = Flask(__name__)
 
@@ -26,7 +27,23 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
     """Register a new user."""
-    return render_template("register.html")
+
+    errors = {}
+
+    # Check if the method is post
+    if request.method == "POST":
+        # Validate email input value
+        email = request.form.get("email")
+        try:
+            valid = validate_email(email)
+            email = valid.email
+        except EmailNotValidError as e:
+            errors["email"] = e
+
+        return render_template("register.html", errors=errors)
+
+    # Return registration page for get requests
+    return render_template("register.html", errors=errors)
