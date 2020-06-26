@@ -58,7 +58,13 @@ def register():
             return render_template("register.html", errors=errors)
 
         # TODO: Connect with database
+        # Insert data into database
+        db.execute("INSERT INTO users (email, username, password) VALUES (:email, :username, :password)", {
+            "email": email, "username": username, "password": password,
+        })
+        db.commit()
 
+        # Render registration success message
         return render_template("register_success.html")
 
     # Return registration page for get requests
