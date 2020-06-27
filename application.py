@@ -53,11 +53,21 @@ def register():
         if len(password) < 3:
             errors["password"] = "The password is not valid. It must be at least 3 characters."
 
+        # Check that there is no user with the same email or username
+        users = db.execute("SELECT email, username FROM users WHERE  email=:email OR username=:username", {
+            "email": email, "username": username}).fetchall()
+
+        for user in users:
+            if user is not None:
+                if user[0] == email:
+                    errors["email"] = "The email is not valid. It was used before."
+                if user[1] == username:
+                    errors["username"] = "The username is not valid. It was used before."
+
         # Return registration page with error messages
         if errors["email"] or errors["username"] or errors["password"]:
             return render_template("register.html", errors=errors)
 
-        # TODO: Connect with database
         # Insert data into database
         db.execute("INSERT INTO users (email, username, password) VALUES (:email, :username, :password)", {
             "email": email, "username": username, "password": password,
