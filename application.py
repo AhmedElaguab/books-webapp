@@ -32,6 +32,10 @@ def index():
 def register():
     """Register a new user."""
 
+    # if user is logged in, redicrect ot dashboard page
+    if "user" in session:
+        return redirect(url_for("dashboard"))
+
     errors = {"email": None, "username": None, "password": None}
 
     # Check if the method is post
@@ -84,6 +88,11 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Login a user"""
+
+    # if user is logged in, redicrect to dashboard page
+    if "user" in session:
+        return redirect(url_for("dashboard"))
 
     errors = {}
 
@@ -122,7 +131,8 @@ def login():
 
 @app.route("/dashboard")
 def dashboard():
-    print(session.get("user"))
+    """Dashboard page."""
+
     # if user is logged in
     if "user" in session:
         return "dashboard"
