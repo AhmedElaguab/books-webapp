@@ -21,7 +21,8 @@
           </div>
           <nav>
             <ul class="d-flex align-items-center list-unstyled">
-              <li><a class="ml-4 text-uppercase" href="/">Home</a></li>
+              <li><a class="ml-4 text-uppercase" href="{{ url_for('index') }}">Home</a></li>
+              <li><a class="ml-4 btn btn-primary text-uppercase" href="{{ url_for('login') }}">Login </a></li>
               <li><a class="ml-4 btn btn-success text-uppercase" href="{{ url_for('register') }}">Register</a></li>
             </ul>
           </nav>

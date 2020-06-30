@@ -79,3 +79,33 @@ def register():
 
     # Return registration page for get requests
     return render_template("register.html", errors=errors)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    errors = {}
+
+    # Check user login
+    if request.method == "POST":
+
+        # Get username
+        username = request.form.get("username")
+
+        # Get password
+        password = request.form.get("password")
+
+        # Get user
+        user = db.execute(
+            "SELECT * FROM users WHERE (username=:username OR email=:username)", {"username": username}).fetchone()
+
+        # Validate the user input values
+        if user is None:
+            errors["username"] = "There is no user with this username"
+
+        if user is not None and password != user[3]:
+            errors["password"] = "The password is wrong"
+
+        return render_template("login.html", errors=errors)
+
+    return render_template("login.html", errors={})
