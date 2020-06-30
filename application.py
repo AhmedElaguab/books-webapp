@@ -1,10 +1,11 @@
 import os
 
-from flask import Flask, session, render_template, request
+from flask import Flask, session, render_template, request, redirect, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from email_validator import validate_email, EmailNotValidError
+from funtions import get_user_dict
 
 app = Flask(__name__)
 
@@ -106,6 +107,26 @@ def login():
         if user is not None and password != user[3]:
             errors["password"] = "The password is wrong"
 
-        return render_template("login.html", errors=errors)
+        # Render login page with errors, when there is some error
+        if errors.get("username") or errors.get("password"):
+            return render_template("login.html", errors=errors)
+
+        # If the user is registred, store it in session
+        session["user"] = get_user_dict(user)
+
+        # Redirect to dashboard
+        return redirect(url_for("dashboard"))
 
     return render_template("login.html", errors={})
+
+
+@app.route("/dashboard")
+def dashboard():
+    print(session.get("user"))
+    # if user is logged in
+    if "user" in session:
+        return "dashboard"
+
+    # If no user is logged in, redirect to login page
+    else:
+        return redirect(url_for("login"))
