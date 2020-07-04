@@ -25,6 +25,11 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
+
+    # if user is logged in, redicrect ot dashboard page
+    if "user" in session:
+        return redirect(url_for("dashboard"))
+
     return render_template("index.html")
 
 
