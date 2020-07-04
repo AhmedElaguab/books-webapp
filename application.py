@@ -140,8 +140,16 @@ def dashboard():
 
     # if user is logged in
     if "user" in session:
-        return "dashboard"
+        return render_template("dashboard.html")
 
     # If no user is logged in, redirect to login page
     else:
         return redirect(url_for("login"))
+
+
+@app.route("/logout")
+def logout():
+    if "user" in session:
+        session.pop("user")
+
+    return redirect(url_for("index"))
