@@ -140,7 +140,15 @@ def dashboard():
 
     # if user is logged in
     if "user" in session:
-        return render_template("dashboard.html")
+        books = []
+        book_query = request.args.get("name").strip()
+        if book_query:
+            # If, user enterd a search query
+            books = db.execute(
+                "SELECT * FROM books WHERE (isbn LIKE :name OR title LIKE :name OR author LIKE :name)", {"name": f"%{book_query}%"}).fetchall()
+            print(books)
+
+        return render_template("dashboard.html", books=books)
 
     # If no user is logged in, redirect to login page
     else:

@@ -6,6 +6,36 @@
 <!-- Content block -->
 {% block content %}
 <div class="row">
-  <h1>Dashboard page.</h1>
+  <div class="col">
+    <h1 class="mb-5">Search Books</h1>
+    <form class="mb-5" action="{{ url_for('dashboard') }}" method="GET">
+      <div class="form-group">
+        <label for="book-name">Books isbn, name or author</label>
+        <input type="text" name="name" class="form-control form-control-lg" id="book-name"
+          placeholder="Books isbn, name or author">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Search</button>
+    </form>
+    <hr class="mb-5" />
+    <div class="books">
+      {% if books %}
+      <div class="row">
+        {% for book in books %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card mb-2 w-100" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ book.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
+              <a href="#" class="card-link">More info</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p>No books.</p>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}
