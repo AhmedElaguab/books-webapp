@@ -1,0 +1,35 @@
+{% extends "./base_books.html" %}
+
+<!-- Title block -->
+{% block title %} Book | Books Reviews {% endblock %}
+
+<!-- Content block -->
+{% block content %}
+<div class="row">
+  <div class="col">
+    <h1 class="mb-5">Book Details{% if book %}: {{book.title}}{% endif %}</h1>
+    <hr class="mb-5" />
+    <div class="book">
+      {% if book %}
+      <div class="row">
+        <div class="col">
+          <div class="book-details">
+            <ul class="list-unstyled">
+              <li>Title: {{ book.title}}</li>
+              <li>Author: {{ book.author }}</li>
+              <li>Year: {{ book.year }}</li>
+              <li>ISBN: {{ book.isbn }}</li>
+            </ul>
+          </div>
+          <div class="reviews">
+            <h3>Reviews:</h3>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p>No such book.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -22,13 +22,13 @@
           <nav>
             <ul class="d-flex align-items-center list-unstyled">
               <li><a class="ml-4 text-uppercase" href="{{ url_for('index') }}">Home</a></li>
+              <li><a class="ml-4 text-uppercase" href="{{ url_for('books') }}">Books</a></li>
               <div class="btn-group ml-4">
                 <button type="button" class="btn btn-info dropdown-toggle text-capitalize" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                   {% if session.user %}
                   {{ session.user.username }}
                   {% endif %}
-
                 </button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item" href="#">Action</a>

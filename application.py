@@ -161,3 +161,10 @@ def logout():
         session.pop("user")
 
     return redirect(url_for("index"))
+
+
+@app.route("/book/<string:isbn>")
+def book(isbn):
+    book = db.execute("SELECT * FROM books WHERE (isbn=:isbn)",
+                      {"isbn": isbn}).first()
+    return render_template("book.html", book=book)
