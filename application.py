@@ -26,9 +26,9 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
 
-    # if user is logged in, redicrect ot dashboard page
+    # if user is logged in, redicrect ot books page
     if "user" in session:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("books"))
 
     return render_template("index.html")
 
@@ -37,9 +37,9 @@ def index():
 def register():
     """Register a new user."""
 
-    # if user is logged in, redicrect ot dashboard page
+    # if user is logged in, redicrect ot books page
     if "user" in session:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("books"))
 
     errors = {"email": None, "username": None, "password": None}
 
@@ -95,9 +95,9 @@ def register():
 def login():
     """Login a user"""
 
-    # if user is logged in, redicrect to dashboard page
+    # if user is logged in, redicrect to books page
     if "user" in session:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("books"))
 
     errors = {}
 
@@ -128,27 +128,27 @@ def login():
         # If the user is registred, store it in session
         session["user"] = get_user_dict(user)
 
-        # Redirect to dashboard
-        return redirect(url_for("dashboard"))
+        # Redirect to books page
+        return redirect(url_for("books"))
 
     return render_template("login.html", errors={})
 
 
-@app.route("/dashboard")
-def dashboard():
-    """Dashboard page."""
+@app.route("/books")
+def books():
+    """Books page."""
 
     # if user is logged in
     if "user" in session:
         books = []
-        book_query = request.args.get("name").strip()
+        book_query = request.args.get("name")
         if book_query:
             # If, user enterd a search query
+            book_query = book_query.strip()
             books = db.execute(
                 "SELECT * FROM books WHERE (isbn LIKE :name OR title LIKE :name OR author LIKE :name)", {"name": f"%{book_query}%"}).fetchall()
-            print(books)
 
-        return render_template("dashboard.html", books=books)
+        return render_template("books.html", books=books)
 
     # If no user is logged in, redirect to login page
     else:
