@@ -167,4 +167,8 @@ def logout():
 def book(isbn):
     book = db.execute("SELECT * FROM books WHERE (isbn=:isbn)",
                       {"isbn": isbn}).first()
-    return render_template("book.html", book=book)
+
+    review = db.execute("SELECT * FROM reviews WHERE user_id=:user_id AND book_id=:book_id",
+                        {"user_id": session.get("user").get("id"), "book_id": book[0]}).first()
+
+    return render_template("book.html", book=book, review=review)
