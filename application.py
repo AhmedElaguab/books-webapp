@@ -146,7 +146,7 @@ def books():
             # If, user enterd a search query
             book_query = book_query.strip()
             books = db.execute(
-                "SELECT * FROM books WHERE (isbn LIKE :name OR title LIKE :name OR author LIKE :name)", {"name": f"%{book_query}%"}).fetchall()
+                "SELECT * FROM books WHERE (isbn LIKE :name OR title LIKE :name OR year LIKE :name OR author LIKE :name)", {"name": f"%{book_query}%"}).fetchall()
 
         return render_template("books.html", books=books)
 
