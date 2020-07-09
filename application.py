@@ -163,10 +163,20 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/book/<string:isbn>")
+@app.route("/book/<string:isbn>", methods=["GET", "POST"])
 def book(isbn):
+
     book = db.execute("SELECT * FROM books WHERE (isbn=:isbn)",
                       {"isbn": isbn}).first()
+
+    if request.method == "POST":
+        rating = request.form.get("rating")
+        review = request.form.get("review")
+
+        db.execute(
+            "INSERT INTO reviews (user_id, book_id, rating, review) VALUES (:user_id, :book_id, :rating, :review)",
+            {"user_id": session.get("user").get("id"), "book_id": book[0], "rating": rating, "review": review})
+        db.commit()
 
     review = db.execute("SELECT * FROM reviews WHERE user_id=:user_id AND book_id=:book_id",
                         {"user_id": session.get("user").get("id"), "book_id": book[0]}).first()

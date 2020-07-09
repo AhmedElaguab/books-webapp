@@ -23,11 +23,16 @@
           </div>
           <div class="reviews">
             <h3>Review:</h3>
-            {% if review%}
-            <p>There is a review</p>
+            {% if review %}
+            <div class="review-body">
+              <ul>
+                <li>Rating: {{ review.rating }}</li>
+                <li>Review: {{ review.review }}</li>
+              </ul>
+            </div>
             {% else %}
             <div class="review-form">
-              <form>
+              <form action="{{ url_for('book', isbn=book.isbn) }}" method="POST">
                 <div class="form-group">
                   <label for="review-rating">Rating:</label>
                   <select name="rating" class="form-control" id="review-rating">
