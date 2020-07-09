@@ -166,6 +166,9 @@ def logout():
 @app.route("/book/<string:isbn>", methods=["GET", "POST"])
 def book(isbn):
 
+    if not session.get("user"):
+        return redirect(url_for("login"))
+
     book = db.execute("SELECT * FROM books WHERE (isbn=:isbn)",
                       {"isbn": isbn}).first()
 
