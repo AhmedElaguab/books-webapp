@@ -184,4 +184,18 @@ def book(isbn):
     review = db.execute("SELECT * FROM reviews WHERE user_id=:user_id AND book_id=:book_id",
                         {"user_id": session.get("user").get("id"), "book_id": book[0]}).first()
 
-    return render_template("book.html", book=book, review=review)
+    other_reviews = db.execute("SELECT * FROM reviews WHERE book_id=:book_id AND user_id!=:user_id",
+                               {"book_id": book[0], "user_id": session.get("user").get("id")}).fetchall()
+
+    review_details = {"count": 0, "average": 0}
+    review_details["count"] = len(other_reviews)
+    for other_review in other_reviews:
+        review_details["average"] += other_review.rating
+
+    if review:
+        review_details["count"] += 1
+        review_details["average"] += review.rating
+
+    review_details["average"] /= review_details["count"]
+
+    return render_template("book.html", book=book, review=review, other_reviews=other_reviews, review_details=review_details)

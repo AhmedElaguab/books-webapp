@@ -22,9 +22,15 @@
             </ul>
           </div>
           <div class="reviews">
-            <h3>Review:</h3>
+            <h3>
+              Reviews:
+              {% if review_details %}
+              {{ review_details.average }} ({{ review_details.count }} reviews.)
+              {% endif %}
+            </h3>
             {% if review %}
             <div class="review-body">
+              <h5>Your Review:</h5>
               <ul>
                 <li>Rating: {{ review.rating }}</li>
                 <li>Review: {{ review.review }}</li>
@@ -52,6 +58,17 @@
                 </div>
               </form>
             </div>
+            {% endif %}
+
+            {% if other_reviews %}
+            <h5>Other Review:</h5>
+            {% for review in other_reviews %}
+            <ul>
+              <li>Rating: {{ review.rating }}</li>
+              <li>Review: {{ review.review }}</li>
+            </ul>
+            <hr>
+            {% endfor %}
             {% endif %}
           </div>
         </div>
