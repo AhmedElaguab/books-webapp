@@ -8,6 +8,13 @@
 <div class="row">
   <div class="col">
     <h1 class="mb-5">Book Details{% if book %}: {{book.title}}{% endif %}</h1>
+    {% if gr_rating_count %}
+    <h2>Goodreads ratings:</h2>
+    <ul>
+      <li>Average Rating: {{ gr_rating_count.average_rating }}</li>
+      <li>Ratings Couont: {{ gr_rating_count.ratings_count }}</li>
+    </ul>
+    {% endif %}
     <hr class="mb-5" />
     <div class="book">
       {% if book %}

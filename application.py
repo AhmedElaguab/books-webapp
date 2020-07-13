@@ -1,4 +1,5 @@
 import os
+import requests
 
 from flask import Flask, session, render_template, request, redirect, url_for
 from flask_session import Session
@@ -172,6 +173,9 @@ def book(isbn):
     book = db.execute("SELECT * FROM books WHERE (isbn=:isbn)",
                       {"isbn": isbn}).first()
 
+    if book is None:
+        return render_template("book.html")
+
     if request.method == "POST":
         rating = request.form.get("rating")
         review = request.form.get("review")
@@ -198,4 +202,9 @@ def book(isbn):
 
     review_details["average"] /= review_details["count"]
 
-    return render_template("book.html", book=book, review=review, other_reviews=other_reviews, review_details=review_details)
+    gr_key = os.getenv("GOODREADS_KEY")
+    gr_req = requests.get("https://www.goodreads.com/book/review_counts.json",
+                          params={"key": gr_key, "isbns": isbn})
+    gr_rating_count = gr_req.json().get("books")[0]
+
+    return render_template("book.html", book=book, review=review, other_reviews=other_reviews, review_details=review_details, gr_rating_count=gr_rating_count)
