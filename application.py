@@ -208,3 +208,36 @@ def book(isbn):
     gr_rating_count = gr_req.json().get("books")[0]
 
     return render_template("book.html", book=book, review=review, other_reviews=other_reviews, review_details=review_details, gr_rating_count=gr_rating_count)
+
+
+@app.route("/api/<isbn>")
+def api(isbn):
+
+    book = db.execute("SELECT * FROM books WHERE (isbn=:isbn)",
+                      {"isbn": isbn}).first()
+
+    if book:
+
+        gr_key = os.getenv("GOODREADS_KEY")
+        gr_req = requests.get("https://www.goodreads.com/book/review_counts.json",
+                              params={"key": gr_key, "isbns": isbn})
+        gr_rating_count = gr_req.json().get("books")[0]
+
+        if gr_rating_count:
+            return {
+                "title": book.title,
+                "author": book.author,
+                "year": book.year,
+                "isbn": book.isbn,
+                "average_score": gr_rating_count.get("average_rating"),
+                "review_count": gr_rating_count.get("reviews_count")
+            }, 200
+        else:
+            return {
+                "title": book.title,
+                "author": book.author,
+                "year": book.year,
+                "isbn": book.isbn,
+            }, 200
+    else:
+        return {"error": {"message": "No such book."}}, 404
